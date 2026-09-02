@@ -1,5 +1,5 @@
 /**
- * dsh-wechat: drive DeepSeek Harness from WeChat.
+ * dsh-wx-bridge: drive DeepSeek Harness from WeChat.
  *
  * 通道：微信官方 ClawBot（腾讯 iLink 机器人协议）— 扫码绑定，私聊驱动 DSH 会话。
  * 只保留 ilink 通道 + 单 owner（MVP）。参考 dsh-chatops index.ts（MIT）。
@@ -12,7 +12,7 @@ import { ILinkStore } from './lib/ilink-store.js'
 import { AuthStore } from './lib/auth.js'
 import { SessionBridge } from './lib/bridge.js'
 
-export const name = 'dsh-wechat'
+export const name = 'dsh-wx-bridge'
 
 // agents: enumerate root agents / deliver prompts / resume cold sessions.
 // sessionQuery: list + read titles of persisted (cold) sessions.
@@ -42,7 +42,7 @@ export async function apply(ctx, config) {
     {
       onMessage: (msg) => {
         bridge.handleInbound(msg).catch((error) =>
-          logger.warn(`dsh-wechat: inbound handling failed: ${error?.message ?? error}`),
+          logger.warn(`dsh-wx-bridge: inbound handling failed: ${error?.message ?? error}`),
         )
       },
       onLogin: (userName) => {
@@ -54,7 +54,7 @@ export async function apply(ctx, config) {
         }
       },
       onLogout: (reason) => auth.audit('bot/logout', { reason, channel: 'ilink' }),
-      onScan: () => logger.info('dsh-wechat: 微信机器人待扫码绑定，打开 /wechat/qr 页面扫码'),
+      onScan: () => logger.info('dsh-wx-bridge: 微信机器人待扫码绑定，打开 /wechat/qr 页面扫码'),
     },
     logger,
     createILinkApi(),
@@ -73,7 +73,7 @@ export async function apply(ctx, config) {
         text: SAFETY_PROMPT_TEXT,
       })
     } catch (error) {
-      logger.warn(`dsh-wechat: safety prompt injection failed: ${error?.message ?? error}`)
+      logger.warn(`dsh-wx-bridge: safety prompt injection failed: ${error?.message ?? error}`)
     }
   }
 
@@ -108,7 +108,7 @@ export async function apply(ctx, config) {
   // 生命周期：跟随插件启停
   ctx.effect(() => {
     ilinkChannel.start().catch((error) =>
-      logger.warn(`dsh-wechat: channel start failed: ${error?.message ?? error}`),
+      logger.warn(`dsh-wx-bridge: channel start failed: ${error?.message ?? error}`),
     )
     return () => ilinkChannel.stop()
   })
@@ -192,9 +192,9 @@ export async function apply(ctx, config) {
         }
       }
     },
-  }, 'dsh-wechat: qr routes')
+  }, 'dsh-wx-bridge: qr routes')
 
-  logger.info('dsh-wechat: loaded')
+  logger.info('dsh-wx-bridge: loaded')
 }
 
 function writeJson(res, status, payload) {
@@ -219,7 +219,7 @@ async function readProfileConfig(current, logger) {
       return { ...current, ...row.config }
     }
   } catch (error) {
-    logger.warn(`dsh-wechat: config read failed: ${error?.message ?? error}`)
+    logger.warn(`dsh-wx-bridge: config read failed: ${error?.message ?? error}`)
   }
   return current
 }
@@ -240,7 +240,7 @@ async function saveProfileOverride(current, next, logger) {
       const parsed = yaml.load(readFileSync(patchPath, 'utf8'))
       if (Array.isArray(parsed)) rows = parsed
     } catch (error) {
-      logger.warn(`dsh-wechat: profile patch parse failed: ${error?.message ?? error}`)
+      logger.warn(`dsh-wx-bridge: profile patch parse failed: ${error?.message ?? error}`)
     }
   }
   const index = rows.findIndex((r) => r && typeof r === 'object' && r.id === 'dsh-wechat' && !r.insert)
@@ -248,7 +248,7 @@ async function saveProfileOverride(current, next, logger) {
   if (index >= 0) rows[index] = row
   else rows.push(row)
   writeFileSync(patchPath, yaml.dump(rows, { noRefs: true, lineWidth: 120 }), 'utf8')
-  logger.info('dsh-wechat: config saved (cordis hot-reloads composition)')
+  logger.info('dsh-wx-bridge: config saved (cordis hot-reloads composition)')
 }
 
 /**

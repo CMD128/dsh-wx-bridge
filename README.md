@@ -1,4 +1,4 @@
-# dsh-wechat — 微信桥接 DeepSeek Harness 插件
+# dsh-wx-bridge — 轻量微信桥接 DSH 插件
 
 > 微信扫码绑定官方 ClawBot（腾讯 iLink 协议）后，**私聊即驱动 DSH 会话**：
 > 发文字就是 prompt，任务完成自动推送。纯 JS（ESM）、零第三方运行时依赖、零公网部署（仅主动出站）。
@@ -25,7 +25,7 @@
 
 ```bash
 # 安装到 DSH web profile
-dsh plugin --profile web add github:CMD128/dsh-wechat
+dsh plugin --profile web add github:CMD128/dsh-wx-bridge
 
 # 重启 DSH Web 后，打开设置 → 微信通道 → 扫码绑定
 dsh web
@@ -70,8 +70,8 @@ ilink-channel.js ──onMessage──► bridge.js ──followup──► DSH 
 ## 开发
 
 ```bash
-git clone https://github.com/CMD128/dsh-wechat
-cd dsh-wechat
+git clone https://github.com/CMD128/dsh-wx-bridge
+cd dsh-wx-bridge
 npm install
 npm run build:client && node --test lib/*.test.js  # 重建 GUI + 跑测试（90 项）
 ```

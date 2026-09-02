@@ -1,7 +1,7 @@
 {
-  "name": "dsh-wechat",
+  "name": "dsh-wx-bridge",
   "version": "0.1.0",
-  "description": "微信桥接 DSH：扫码绑定官方 ClawBot（iLink），私聊驱动 DeepSeek Harness 会话",
+  "description": "轻量微信桥接 DSH：扫码绑定官方 ClawBot（iLink），私聊驱动会话（文本/审批/模型/人格）",
   "license": "MIT",
   "type": "module",
   "main": "index.js",

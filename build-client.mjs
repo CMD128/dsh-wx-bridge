@@ -6,6 +6,9 @@
 import { build } from 'esbuild'
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 
+// 插件注册 id 动态取自 package.json 的 name——改名后无需改构建脚本。
+const pkgName = JSON.parse(readFileSync('package.json', 'utf8')).name
+
 mkdirSync('lib', { recursive: true })
 
 await build({
@@ -29,7 +32,7 @@ if (bundled.includes('__ModuleLoader__')) {
 }
 
 const wrapped = `window.__ModuleLoader__.load({
-	id: "dsh-wechat",
+	id: ${JSON.stringify(pkgName)},
 	factory: (require) => {
 		var module = { exports: {} };
 		var exports = module.exports;

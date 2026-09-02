@@ -1,5 +1,5 @@
 /**
- * dsh-wechat client half: a settings-page tab「微信通道」(settings.section
+ * dsh-wx-bridge client half: a settings-page tab「微信通道」(settings.section
  * slot — the DSH-idiomatic extension point for plugin settings).
  *
  * 连接状态 + 扫码绑定 + 授权码/推送/默认会话配置。数据经 host loopback API
@@ -7,7 +7,7 @@
  */
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
-export const name = 'dsh-wechat'
+export const name = 'dsh-wx-bridge'
 export const inject = ['slots']
 
 const STATE_LABELS = {
@@ -207,7 +207,7 @@ function WechatSettings() {
 function apply(ctx) {
   ctx.slots.inject('settings.section', () => ctx.slots.register({
     name: 'settings.section',
-    id: 'dsh-wechat',
+    id: 'dsh-wx-bridge',
     order: 22,
     label: () => '微信通道',
   }, WechatSettings))

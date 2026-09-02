@@ -1,13 +1,13 @@
-# dsh-wechat bundle patch：一个 insert 行承载插件全部配置。
+# dsh-wx-bridge bundle patch：一个 insert 行承载插件全部配置。
 # 用户可在 profile 的 cordis.patch.yml 按 id 覆盖本行；patch 语义是整行替换，
 # 覆盖时必须复述所有要保留的键。
 #
 # 通道：微信官方 ClawBot / iLink 机器人（合规，扫码绑定，token 长效，重启免扫码）。
 - insert:
-    - id: dsh-wechat
-      name: dsh-wechat
+    - id: dsh-wx-bridge
+      name: dsh-wx-bridge
       config:
-        # 登录态持久化目录。空 = $DSH_HOME/storages/dsh-wechat/。
+        # 登录态持久化目录。空 = $DSH_HOME/storages/dsh-wx-bridge/。
         storagePath: ''
         security:
           # 额外信任的私聊用户 id（ilink_user_id）。扫码绑定的 owner 自动受信。
