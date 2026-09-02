@@ -1,0 +1,70 @@
+# The dsh-chatops bundle patch: one insert row carrying the whole plugin config.
+# Users override this row (by id) in their profile cordis.patch.yml; a patch
+# replaces the row's whole config, so restate every key you keep.
+#
+# 默认通道为微信官方 ClawBot/iLink 机器人（合规无封号风险）；
+# wechaty 个人号方案违反《微信软件许可及服务协议》，仅限自用、建议小号。
+- insert:
+    - id: dsh-chatops
+      name: dsh-chatops
+      config:
+        # 通道实现（channels 非空时 channel 被忽略）：
+        #   ilink    微信官方 ClawBot/iLink 机器人（默认；扫码绑定，token 长效，重启免扫码）
+        #   wechaty  个人微信号 Bot（违反微信用户协议，封号风险，仅限自用）
+        #   feishu   飞书自建应用机器人（官方开放平台，长连接）
+        #   dingtalk 钉钉企业内部应用机器人（官方开放平台，Stream 长连接）
+        #   wecom    企业微信智能机器人（官方 aibot SDK，WS 长连接；仅企业内成员可见）
+        channel: 'ilink'
+        # 启用的通道列表，可多选并行。未填凭据的通道空转，不影响其他通道。
+        channels: [ilink, feishu, dingtalk, wecom]
+        # [feishu] 自建应用凭据（飞书开发者后台 → 企业自建应用 → 机器人能力）：
+        feishu:
+          appId: ''
+          appSecret: ''
+          # feishu = 国内版；lark = 海外版
+          domain: 'feishu'
+        # [dingtalk] 企业内部应用凭据（钉钉开放平台 → 机器人 → Stream 模式）：
+        dingtalk:
+          # Client ID（AppKey），同时作为 robotCode
+          clientId: ''
+          # Client Secret（AppSecret）
+          clientSecret: ''
+        # [wecom] 智能机器人凭据（企业微信管理后台 → 智能机器人）：
+        wecom:
+          botId: ''
+          secret: ''
+        # [wechaty] 协议实现（ilink 通道忽略以下两项）：
+        #   wechaty-puppet-wechat4u  免费网页协议（部分号无法登录）
+        #   wechaty-puppet-padlocal  付费 iPad 协议（稳定，需 token）
+        #   wechaty-puppet-xp        免费 Windows PC 注入（仅 Windows）
+        puppet: 'wechaty-puppet-wechat4u'
+        # [wechaty] 付费 puppet 的 token（padlocal 等），wechat4u 留空。
+        puppetToken: ''
+        # 登录态持久化目录。空 = $DSH_HOME/storages/dsh-chatops/。
+        storagePath: ''
+        security:
+          # 响应"文件传输助手"里的消息（最安全的入口，只有本人可见）。
+          listenFilehelper: true
+          # 响应"自己发给自己"的消息。
+          listenSelf: true
+          # 额外信任的私聊用户 id（ilink 用户 id / wechaty wxid / 飞书 open_id）。
+          # ilink 扫码绑定的 owner、飞书首个私聊用户自动成为管理员。
+          allowContacts: []
+          # 信任的群聊（wechaty 群 topic / 飞书 chat_id）；群内只有 @Bot 的消息才被响应。
+          allowRooms: []
+        push:
+          # 会话任务完成时推送摘要到绑定的聊天窗口。
+          onSessionComplete: true
+          # 触发审批时推送到绑定窗口，等待 /approve 或 /reject。
+          onApproval: true
+          # 审批等待超时（秒），超时后放行给其他 answerer（如 GUI）。
+          approvalTimeoutSec: 300
+          # /log 超长输出转为 txt 文件发送（通道支持时），避免刷屏。
+          longOutputAsFile: true
+        reply:
+          # 单条微信消息最大字节数，超长自动分段。
+          maxChunkBytes: 6000
+          # 发送节流：两条消息之间的最小间隔（毫秒，附加随机抖动），防风控。
+          rateLimitMs: 1200
+          # 文件回传大小上限（MB）。平台侧仍可能按账号/配额拒绝超大文件。
+          maxFileMB: 100
