@@ -1,0 +1,22 @@
+# dsh-wechat bundle patch：一个 insert 行承载插件全部配置。
+# 用户可在 profile 的 cordis.patch.yml 按 id 覆盖本行；patch 语义是整行替换，
+# 覆盖时必须复述所有要保留的键。
+#
+# 通道：微信官方 ClawBot / iLink 机器人（合规，扫码绑定，token 长效，重启免扫码）。
+- insert:
+    - id: dsh-wechat
+      name: dsh-wechat
+      config:
+        # 登录态持久化目录。空 = $DSH_HOME/storages/dsh-wechat/。
+        storagePath: ''
+        security:
+          # 额外信任的私聊用户 id（ilink_user_id）。扫码绑定的 owner 自动受信。
+          allowContacts: []
+        push:
+          # 会话任务完成时推送摘要到绑定的聊天窗口。
+          onSessionComplete: true
+        reply:
+          # 单条微信消息最大字节数，超长自动分段。
+          maxChunkBytes: 6000
+          # 发送节流：两条消息最小间隔（毫秒，附加随机抖动），防风控。
+          rateLimitMs: 1200
